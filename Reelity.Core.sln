@@ -3,8 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reelity.Core.Infrastructure.Build", "Reelity.Core.Infrastructure.Build\Reelity.Core.Infrastructure.Build.csproj", "{990A6AD9-B152-4A09-AFAE-2BF7332E799A}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reelity.Core.Api", "Reelity.Core.Api\Reelity.Core.Api.csproj", "{76FF8A43-0652-4B9F-8093-1B20629EFCA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reelity.Core.Infrastructure.Build", "Reelity.Core.Infrastructure.Build\Reelity.Core.Infrastructure.Build.csproj", "{990A6AD9-B152-4A09-AFAE-2BF7332E799A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reelity.Core.Api", "Reelity.Core.Api\Reelity.Core.Api.csproj", "{76FF8A43-0652-4B9F-8093-1B20629EFCA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reelity.Core.Tests.Unit", "Reelity.Core.Tests.Unit\Reelity.Core.Tests.Unit.csproj", "{41E5B25A-280A-4535-8D37-D988D9E54BBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,12 +23,15 @@ Global
 		{76FF8A43-0652-4B9F-8093-1B20629EFCA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76FF8A43-0652-4B9F-8093-1B20629EFCA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76FF8A43-0652-4B9F-8093-1B20629EFCA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41E5B25A-280A-4535-8D37-D988D9E54BBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41E5B25A-280A-4535-8D37-D988D9E54BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41E5B25A-280A-4535-8D37-D988D9E54BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41E5B25A-280A-4535-8D37-D988D9E54BBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {76D93504-D874-4A6B-8138-6F17B4409C72}
 		SolutionGuid = {A38D432E-7F8F-4AD7-91AB-DFA036B45BC4}
 	EndGlobalSection
 EndGlobal
