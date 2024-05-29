@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reelity.Core.Infrastructure.Build", "Reelity.Core.Infrastructure.Build\Reelity.Core.Infrastructure.Build.csproj", "{990A6AD9-B152-4A09-AFAE-2BF7332E799A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reelity.Core.Api", "Reelity.Core.Api\Reelity.Core.Api.csproj", "{76FF8A43-0652-4B9F-8093-1B20629EFCA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,11 +16,16 @@ Global
 		{990A6AD9-B152-4A09-AFAE-2BF7332E799A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{990A6AD9-B152-4A09-AFAE-2BF7332E799A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{990A6AD9-B152-4A09-AFAE-2BF7332E799A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76FF8A43-0652-4B9F-8093-1B20629EFCA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76FF8A43-0652-4B9F-8093-1B20629EFCA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76FF8A43-0652-4B9F-8093-1B20629EFCA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76FF8A43-0652-4B9F-8093-1B20629EFCA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {76D93504-D874-4A6B-8138-6F17B4409C72}
+		SolutionGuid = {A38D432E-7F8F-4AD7-91AB-DFA036B45BC4}
 	EndGlobalSection
 EndGlobal
