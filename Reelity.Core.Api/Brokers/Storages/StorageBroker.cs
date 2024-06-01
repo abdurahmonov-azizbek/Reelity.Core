@@ -4,6 +4,7 @@
 // -------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Reelity.Core.Api.Brokers.Storages
 {
