@@ -4,6 +4,9 @@
 // -------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Reelity.Core.Api.Models.Metadatas;
+using System.Threading.Tasks;
 
 namespace Reelity.Core.Api.Brokers.Storages
 {
@@ -15,6 +18,14 @@ namespace Reelity.Core.Api.Brokers.Storages
         {
             this.configuration = configuration;
             this.Database.Migrate();
+        }
+
+        private async ValueTask<T> InsertAsync<T>(T @object)
+        {
+            this.Entry(@object).State = EntityState.Added;
+            await this.SaveChangesAsync();
+
+            return @object;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
