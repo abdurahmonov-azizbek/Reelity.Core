@@ -1,10 +1,11 @@
-﻿// -------------------------------------------------------
+// -------------------------------------------------------
 // Copyright (c) Coalition of the Good-Hearted Engineers
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace Reelity.Core.Api.Brokers.Storages
 {
@@ -17,6 +18,9 @@ namespace Reelity.Core.Api.Brokers.Storages
             this.configuration = configuration;
             this.Database.Migrate();
         }
+
+        private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class =>
+           await FindAsync<T>(objectIds);
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
