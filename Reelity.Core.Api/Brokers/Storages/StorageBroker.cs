@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------
+// -------------------------------------------------------
 // Copyright (c) Coalition of the Good-Hearted Engineers
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
@@ -27,7 +27,10 @@ namespace Reelity.Core.Api.Brokers.Storages
 
             return @object;
         }
-
+        
+        private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class =>
+           await FindAsync<T>(objectIds);
+           
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = this.configuration.GetConnectionString(name: "DefaultConnection");
