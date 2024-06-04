@@ -27,9 +27,12 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+        public ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata) =>
+            TryCatch(async () =>
+                {
+                    ValidateVideoMetadataOnAdd(videoMetadata);
+
+                    return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
+                });
+            }
 }
