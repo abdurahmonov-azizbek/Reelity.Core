@@ -1,10 +1,11 @@
-﻿// -------------------------------------------------------
+// -------------------------------------------------------
 // Copyright (c) Coalition of the Good-Hearted Engineers
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Reelity.Core.Api.Models.Metadatas;
 using System.Threading.Tasks;
 
 namespace Reelity.Core.Api.Brokers.Storages
@@ -19,6 +20,14 @@ namespace Reelity.Core.Api.Brokers.Storages
             this.Database.Migrate();
         }
 
+        private async ValueTask<T> InsertAsync<T>(T @object)
+        {
+            this.Entry(@object).State = EntityState.Added;
+            await this.SaveChangesAsync();
+
+            return @object;
+        }
+        
         private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class =>
            await FindAsync<T>(objectIds);
 
@@ -30,7 +39,7 @@ namespace Reelity.Core.Api.Brokers.Storages
 
             return @object;
         }
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = this.configuration.GetConnectionString(name: "DefaultConnection");
