@@ -5,6 +5,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.Mapping;
 using Reelity.Core.Api.Models.Metadatas;
 using System.Threading.Tasks;
 
@@ -27,9 +28,18 @@ namespace Reelity.Core.Api.Brokers.Storages
 
             return @object;
         }
-        
+
         private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class =>
            await FindAsync<T>(objectIds);
+
+        public async ValueTask<T> UpdateAsync<T>(T @object)
+        {
+            var broker = new StorageBroker(this.configuration);
+            broker.Entry(@object).State = EntityState.Modified;
+            await broker.SaveChangesAsync();
+
+            return @object;
+        }
 
         private async ValueTask<T> DeleteAsync<T>(T @object)
         {
@@ -39,7 +49,7 @@ namespace Reelity.Core.Api.Brokers.Storages
 
             return @object;
         }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = this.configuration.GetConnectionString(name: "DefaultConnection");

@@ -13,6 +13,7 @@ namespace Reelity.Core.Api.Brokers.Storages
     {
         ValueTask<VideoMetadata> InsertVideoMetadataAsync(VideoMetadata videoMetadata);
         ValueTask<VideoMetadata> SelectVideoMetadataByIdAsync(Guid videoMetadataId);
+        ValueTask<VideoMetadata> UpdateVideoMetadataAsync(VideoMetadata videoMetadata);
         ValueTask<VideoMetadata> DeleteVideoMetadataAsync(VideoMetadata videoMetadata);
     }
 }
