@@ -7,6 +7,7 @@ using Reelity.Core.Api.Models.Metadatas;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Reelity.Core.Api.Brokers.Storages
 {
@@ -16,6 +17,9 @@ namespace Reelity.Core.Api.Brokers.Storages
 
         public async ValueTask<VideoMetadata> InsertVideoMetadataAsync(VideoMetadata videoMetadata) =>
             await InsertAsync(videoMetadata);
+
+        public IQueryable<VideoMetadata> SelectAllVideoMetadatas() =>
+            SelectAll<VideoMetadata>();
 
         public async ValueTask<VideoMetadata> SelectVideoMetadataByIdAsync(Guid videoMetadataId) =>
            await SelectAsync<VideoMetadata>(videoMetadataId);
