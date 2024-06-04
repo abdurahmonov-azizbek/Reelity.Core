@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Reelity.Core.Api.Models.Metadatas;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reelity.Core.Api.Brokers.Storages
@@ -27,9 +28,16 @@ namespace Reelity.Core.Api.Brokers.Storages
 
             return @object;
         }
-        
+
         private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class =>
            await FindAsync<T>(objectIds);
+
+        public IQueryable<T> SelectAll<T>() where T : class
+        {
+            var broker = new StorageBroker(this.configuration);
+
+            return broker.Set<T>();
+        }
 
         private async ValueTask<T> DeleteAsync<T>(T @object)
         {
@@ -39,7 +47,7 @@ namespace Reelity.Core.Api.Brokers.Storages
 
             return @object;
         }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = this.configuration.GetConnectionString(name: "DefaultConnection");
