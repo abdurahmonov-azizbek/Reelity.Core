@@ -6,6 +6,7 @@
 using Microsoft.Data.SqlClient;
 using Reelity.Core.Api.Models.Metadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
+using STX.EFxceptions.Abstractions.Models.Exceptions;
 using System;
 using System.Threading.Tasks;
 using Xeptions;
@@ -22,7 +23,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             {
                 return await returningVideoMetadataFunction();
             }
-            catch(NullVideoMetadataException nullVideoMetadataException)
+            catch (NullVideoMetadataException nullVideoMetadataException)
             {
                 throw CreateAndLogValidationException(nullVideoMetadataException);
             }
@@ -35,6 +36,25 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
             }
+            catch (DuplicateKeyException dublicateKeyException)
+            {
+                var alreadyExistsVideoMetadataException = new AlreadyExitsVideoMetadataException(
+                    message: "Video metadata already exists.",
+                    innerException: dublicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
+            }
+        }
+
+        private Exception CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var videoMetadataDependencyValidationException = new VideoMetadataDependencyValidationException(
+                message: "Video metadata Dependency validation error occured , fix the errors and try again.",
+                innerException: exception);
+
+            this.loggingBroker.LogError(videoMetadataDependencyValidationException);
+
+            return videoMetadataDependencyValidationException;
         }
 
         private VideoMetadataDependencyException CreateAndLogCriticalDependencyException(
