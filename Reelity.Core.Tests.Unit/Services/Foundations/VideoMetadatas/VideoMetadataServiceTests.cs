@@ -3,6 +3,7 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using Microsoft.Data.SqlClient;
 using Moq;
 using Reelity.Core.Api.Brokers.DateTimes;
 using Reelity.Core.Api.Brokers.Loggings;
@@ -11,6 +12,7 @@ using Reelity.Core.Api.Models.Metadatas;
 using Reelity.Core.Api.Services.VideoMetadatas;
 using System;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
 using Xeptions;
 
@@ -72,5 +74,8 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
+
+        private static SqlException GetSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
     }
 }

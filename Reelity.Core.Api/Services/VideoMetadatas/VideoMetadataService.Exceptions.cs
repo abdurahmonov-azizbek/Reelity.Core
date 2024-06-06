@@ -3,6 +3,7 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using Microsoft.Data.SqlClient;
 using Reelity.Core.Api.Models.Metadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using System;
@@ -25,7 +26,18 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             {
                 throw CreateAndLogValidationException(nullVideoMetadataException);
             }
+            catch (SqlException sqlException)
+            {
+                FailedVideoMetadataStorageException failedVideoMetadataStorageException =
+                    new FailedVideoMetadataStorageException(
+                        message: "Failed Video metadata error occured, contact support.",
+                        innerException: sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
+            }
         }
+
+        
 
         private VideoMetadataValidationException CreateAndLogValidationException(
             Xeption exception)
