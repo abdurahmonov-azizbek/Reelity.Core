@@ -77,5 +77,8 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
         private static SqlException GetSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static string GetRandomString() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
     }
 }
