@@ -37,7 +37,17 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             }
         }
 
-        
+        private VideoMetadataDependencyException CreateAndLogCriticalDependencyException(
+            Xeption exception)
+        {
+            var videoMetadataDependencyException = new VideoMetadataDependencyException(
+                "Video metadata dependency error occured, fix the errors and try again.",
+                    exception);
+
+            this.loggingBroker.LogCritical(videoMetadataDependencyException);
+
+            return videoMetadataDependencyException;
+        }
 
         private VideoMetadataValidationException CreateAndLogValidationException(
             Xeption exception)
