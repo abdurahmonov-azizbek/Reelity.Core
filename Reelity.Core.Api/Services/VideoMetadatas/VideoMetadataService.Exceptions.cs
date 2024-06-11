@@ -27,6 +27,10 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             {
                 throw CreateAndLogValidationException(nullVideoMetadataException);
             }
+            catch (InvalidVideoMetadataException invalidVideoMetadataException)
+            {
+                throw CreateAndLogValidationException(invalidVideoMetadataException);
+            }
             catch (SqlException sqlException)
             {
                 FailedVideoMetadataStorageException failedVideoMetadataStorageException =

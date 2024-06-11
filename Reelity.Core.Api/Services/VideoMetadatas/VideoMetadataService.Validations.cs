@@ -20,7 +20,13 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                 (Rule: IsInvalid(videoMetadata.Title), Parameter: nameof(VideoMetadata.Title)),
                 (Rule: IsInvalid(videoMetadata.BlobPath), Parameter: nameof(VideoMetadata.BlobPath)),
                 (Rule: IsInvalid(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
-                (Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)));
+                (Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)),
+
+                (Rule: IsNotSame(
+                        firstDate: videoMetadata.UpdatedDate,
+                        secondDate: videoMetadata.CreatedDate,
+                        secondDateName: nameof(videoMetadata.CreatedDate)),
+                   Parameter: nameof(videoMetadata.UpdatedDate)));
         }
 
         private void ValidateVideoMetadataNotNull(VideoMetadata videoMetadata)
@@ -30,6 +36,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                 throw new NullVideoMetadataException("VideoMetadata is null.");
             }
         }
+
         private static dynamic IsInvalid(Guid Id) => new
         {
             Condition = Id == Guid.Empty,
