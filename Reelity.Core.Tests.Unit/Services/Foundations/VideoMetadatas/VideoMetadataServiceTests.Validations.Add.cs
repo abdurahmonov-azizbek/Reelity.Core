@@ -119,7 +119,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var invalidVideoMetadataException =
                 new InvalidVideoMetadataException(
-                    message: "Vide");
+                    message: "Video Metadata is invalid.");
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.UpdatedDate),
