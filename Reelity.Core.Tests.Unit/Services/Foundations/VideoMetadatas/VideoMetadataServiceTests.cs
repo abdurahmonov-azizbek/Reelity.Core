@@ -11,6 +11,7 @@ using Reelity.Core.Api.Brokers.Storages;
 using Reelity.Core.Api.Models.Metadatas;
 using Reelity.Core.Api.Services.VideoMetadatas;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
@@ -35,6 +36,12 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
                 storageBroker: this.storageBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object,
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
+        }
+
+        private IQueryable<VideoMetadata> CreateRandomLanguages()
+        {
+            return CreateRandomVideoMetadataFiller(date: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber()).AsQueryable();
         }
 
         private static VideoMetadata CreateRandomVideoMetadata() =>

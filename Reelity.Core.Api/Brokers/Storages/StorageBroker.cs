@@ -6,6 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Reelity.Core.Api.Models.Metadatas;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reelity.Core.Api.Brokers.Storages
@@ -39,7 +40,14 @@ namespace Reelity.Core.Api.Brokers.Storages
 
             return @object;
         }
-        
+
+        public IQueryable<T> SelectAll<T>() where T : class
+        {
+            var broker = new StorageBroker(configuration);
+
+            return broker.Set<T>();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = this.configuration.GetConnectionString(name: "DefaultConnection");

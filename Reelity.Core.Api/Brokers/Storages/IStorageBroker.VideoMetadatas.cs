@@ -5,6 +5,7 @@
 using Microsoft.Extensions.Hosting;
 using Reelity.Core.Api.Models.Metadatas;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reelity.Core.Api.Brokers.Storages
@@ -14,5 +15,6 @@ namespace Reelity.Core.Api.Brokers.Storages
         ValueTask<VideoMetadata> InsertVideoMetadataAsync(VideoMetadata videoMetadata);
         ValueTask<VideoMetadata> SelectVideoMetadataByIdAsync(Guid videoMetadataId);
         ValueTask<VideoMetadata> DeleteVideoMetadataAsync(VideoMetadata videoMetadata);
+        IQueryable<VideoMetadata> SelectAllVideoMetadatas();
     }
 }

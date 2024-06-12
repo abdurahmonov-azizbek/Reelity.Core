@@ -7,6 +7,7 @@ using Reelity.Core.Api.Models.Metadatas;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Reelity.Core.Api.Brokers.Storages
 {
@@ -22,5 +23,8 @@ namespace Reelity.Core.Api.Brokers.Storages
 
         public async ValueTask<VideoMetadata> DeleteVideoMetadataAsync(VideoMetadata videoMetadata) =>
             await DeleteAsync(videoMetadata);
+
+        public IQueryable<VideoMetadata> SelectAllVideoMetadatas() =>
+            SelectAll<VideoMetadata>();
     }
 }
