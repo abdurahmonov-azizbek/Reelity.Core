@@ -8,6 +8,7 @@ using Reelity.Core.Api.Models.Metadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using STX.EFxceptions.Abstractions.Models.Exceptions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -16,6 +17,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
     public partial class VideoMetadataService
     {
         private delegate ValueTask<VideoMetadata> ReturningVideoMetadataFunction();
+        private delegate IQueryable<VideoMetadata> ReturningVideoMetadatasFunction();
 
         private async ValueTask<VideoMetadata> TryCatch(ReturningVideoMetadataFunction returningVideoMetadataFunction)
         {
@@ -50,6 +52,22 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             }
         }
 
+        private IQueryable<VideoMetadata> TryCatch(ReturningVideoMetadatasFunction returningVideoMetadataFunction)
+        {
+            try
+            {
+                return returningVideoMetadataFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedVideoMetadataStorageException = new FailedVideoMetadataStorageException(
+                   "Failed Video metadata storage exception occurred, contact support",
+                    sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
+            }
+        }
+
         private Exception CreateAndLogDependencyValidationException(Xeption exception)
         {
             var videoMetadataDependencyValidationException = new VideoMetadataDependencyValidationException(
@@ -66,7 +84,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
         {
             var videoMetadataDependencyException = new VideoMetadataDependencyException(
                 "Video metadata dependency error occured, fix the errors and try again.",
-                    exception);
+                    innerException: exception);
 
             this.loggingBroker.LogCritical(videoMetadataDependencyException);
 
@@ -78,7 +96,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
         {
             var videoMetadataValidationException = new VideoMetadataValidationException(
                 "Video Metadata Validation Exception occured, fix the errors and try again.",
-                    exception);
+                    innerException: exception);
 
             this.loggingBroker.LogError(videoMetadataValidationException);
 

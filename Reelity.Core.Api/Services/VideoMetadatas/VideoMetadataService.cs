@@ -37,6 +37,6 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                 });
 
         public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
-            this.storageBroker.SelectAllVideoMetadatas();
+            TryCatch(() => this.storageBroker.SelectAllVideoMetadatas());
     }
 }
