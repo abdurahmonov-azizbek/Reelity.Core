@@ -7,7 +7,6 @@ using Reelity.Core.Api.Brokers.DateTimes;
 using Reelity.Core.Api.Brokers.Loggings;
 using Reelity.Core.Api.Brokers.Storages;
 using Reelity.Core.Api.Models.Metadatas;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,6 +37,6 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                 });
 
         public IQueryable<VideoMetadata> RetrieveAllLanguages() =>
-            throw new NotImplementedException();
+            this.storageBroker.SelectAllVideoMetadatas();
     }
 }
