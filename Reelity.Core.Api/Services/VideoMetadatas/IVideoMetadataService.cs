@@ -12,7 +12,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
     public interface IVideoMetadataService
     {
         ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata);
-        IQueryable<VideoMetadata> RetrieveAllLanguages();
+        IQueryable<VideoMetadata> RetrieveAllVideoMetadatas();
 
     }
 }

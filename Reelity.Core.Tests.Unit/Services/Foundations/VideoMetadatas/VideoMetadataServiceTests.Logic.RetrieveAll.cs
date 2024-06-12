@@ -27,7 +27,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             // when
             IQueryable<VideoMetadata> actualVideoMetadatas =
-                this.videoMetadataService.RetrieveAllLanguages();
+                this.videoMetadataService.RetrieveAllVideoMetadatas();
 
             // then
             actualVideoMetadatas.Should().BeEquivalentTo(expectedLanguages);

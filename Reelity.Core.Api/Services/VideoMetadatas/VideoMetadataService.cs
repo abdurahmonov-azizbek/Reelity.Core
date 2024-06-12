@@ -36,7 +36,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                     return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
                 });
 
-        public IQueryable<VideoMetadata> RetrieveAllLanguages() =>
+        public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
             this.storageBroker.SelectAllVideoMetadatas();
     }
 }
