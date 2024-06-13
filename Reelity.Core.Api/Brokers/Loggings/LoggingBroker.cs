@@ -18,6 +18,9 @@ namespace Reelity.Core.Api.Brokers.Loggings
         public void LogTrace(string message) =>
             this.logger.LogTrace(message);
 
+        public void LogCritical(Exception exception) =>
+            this.logger.LogCritical(exception, exception.Message);
+
         public void LogDebug(string message) =>
             this.logger.LogDebug(message);
 
