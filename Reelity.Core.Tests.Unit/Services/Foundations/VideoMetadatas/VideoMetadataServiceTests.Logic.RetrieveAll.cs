@@ -17,7 +17,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
         public void ShouldRetrieveAllVideoMetadatas()
         {
             // given
-            IQueryable<VideoMetadata> randomLanguages = CreateRandomLanguages();
+            IQueryable<VideoMetadata> randomLanguages = CreateRandomVideoMetadatas();
             IQueryable<VideoMetadata> storageLanguages = randomLanguages;
             IQueryable<VideoMetadata> expectedLanguages = storageLanguages.DeepClone();
 

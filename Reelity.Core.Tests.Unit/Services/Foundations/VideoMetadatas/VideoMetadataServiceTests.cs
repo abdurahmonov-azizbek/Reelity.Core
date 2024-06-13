@@ -38,7 +38,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
-        private IQueryable<VideoMetadata> CreateRandomLanguages()
+        private IQueryable<VideoMetadata> CreateRandomVideoMetadatas()
         {
             return CreateRandomVideoMetadataFiller(date: GetRandomDateTimeOffset())
                 .Create(count: GetRandomNumber()).AsQueryable();
