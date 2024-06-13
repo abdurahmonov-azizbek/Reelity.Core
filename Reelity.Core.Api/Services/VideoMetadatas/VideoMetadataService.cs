@@ -3,6 +3,7 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using FluentAssertions;
 using Reelity.Core.Api.Brokers.DateTimes;
 using Reelity.Core.Api.Brokers.Loggings;
 using Reelity.Core.Api.Brokers.Storages;
@@ -40,14 +41,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
         public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
             TryCatch(() => this.storageBroker.SelectAllVideoMetadatas());
 
-        public async ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId)
-        {
-            VideoMetadata maybeVideoMetadata = 
-                await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
-
-            return maybeVideoMetadata;
-        }
-
-
+        public async ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId) =>
+            throw new NotImplementedException();
     }
 }
