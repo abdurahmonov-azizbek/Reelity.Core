@@ -41,6 +41,13 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             TryCatch(() => this.storageBroker.SelectAllVideoMetadatas());
 
         public async ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId)
-            => throw new NotImplementedException();
+        {
+            VideoMetadata maybeVideoMetadata = 
+                await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
+
+            return maybeVideoMetadata;
+        }
+
+
     }
 }
