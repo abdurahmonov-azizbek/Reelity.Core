@@ -76,7 +76,16 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             }
         }
 
-       
+        private VideoMetadataServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var languageServiceException = new VideoMetadataServiceException(
+                "Video metadata service error occurred, contact support.",
+                exception);
+
+            this.loggingBroker.LogError(languageServiceException);
+
+            return languageServiceException;
+        }
 
         private Exception CreateAndLogDependencyValidationException(Xeption exception)
         {
