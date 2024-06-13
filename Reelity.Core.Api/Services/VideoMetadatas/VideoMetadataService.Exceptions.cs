@@ -61,12 +61,22 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             catch (SqlException sqlException)
             {
                 var failedVideoMetadataStorageException = new FailedVideoMetadataStorageException(
-                   "Failed Video metadata storage exception occurred, contact support",
-                    sqlException);
+                   message: "Failed Video metadata storage exception occurred, contact support",
+                   innerException: sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
             }
+            catch (Exception serviceException)
+            {
+                var failedLanguageServiceException = new FailedVideoMetadataServiceException(
+                    message: "Failed Video metadata service error occured, please contact support",
+                    innerException: serviceException);
+
+                throw CreateAndLogServiceException(failedLanguageServiceException);
+            }
         }
+
+       
 
         private Exception CreateAndLogDependencyValidationException(Xeption exception)
         {
