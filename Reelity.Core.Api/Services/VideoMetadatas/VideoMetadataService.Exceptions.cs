@@ -50,6 +50,14 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
             }
+            catch (Exception serviceException)
+            {
+                var failedLanguageServiceException = new FailedVideoMetadataServiceException(
+                    message: "Failed Video metadata service error occured, please contact support",
+                    innerException: serviceException);
+
+                throw CreateAndLogServiceException(failedLanguageServiceException);
+            }
         }
 
         private IQueryable<VideoMetadata> TryCatch(ReturningVideoMetadatasFunction returningVideoMetadataFunction)
