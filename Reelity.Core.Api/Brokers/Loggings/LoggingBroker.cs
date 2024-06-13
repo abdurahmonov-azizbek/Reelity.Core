@@ -15,9 +15,6 @@ namespace Reelity.Core.Api.Brokers.Loggings
         public LoggingBroker(ILogger<LoggingBroker> logger) =>
             this.logger = logger;
 
-        public void LogDebug(string message) =>
-            this.logger.LogDebug(message);
-
         public void LogWarning(string message) =>
             this.logger.LogWarning(message);
 
