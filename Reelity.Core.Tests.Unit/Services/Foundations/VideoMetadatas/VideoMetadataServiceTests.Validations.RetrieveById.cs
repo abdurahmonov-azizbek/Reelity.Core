@@ -52,5 +52,48 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfVideoMetadataIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid someVideoMetadataId = Guid.NewGuid();
+            VideoMetadata noVideoMetadata = null;
+
+            var notFoundVideoMetadataValidationException =
+                new NotFoundVideoMetadataException(
+                    $"Couldn't find language with id:{someVideoMetadataId}",
+                    someVideoMetadataId);
+
+            var expectedVideoMetadataValidationException =
+                new VideoMetadataValidationException(
+                    message: "Video Metadata Validation Exception occured, fix the errors and try again.",
+                    innerException: notFoundVideoMetadataValidationException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectVideoMetadataByIdAsync(It.IsAny<Guid>())).ReturnsAsync(noVideoMetadata);
+
+            //when
+            ValueTask<VideoMetadata> retrieveByIdVideoMetadataTask =
+                this.videoMetadataService.RetrieveVideoMetadataByIdAsync(someVideoMetadataId);
+
+            VideoMetadataValidationException actualVideoMetadataValidationExcaption =
+                await Assert.ThrowsAsync<VideoMetadataValidationException>(
+                    retrieveByIdVideoMetadataTask.AsTask);
+
+            //then
+            actualVideoMetadataValidationExcaption.Should().
+                BeEquivalentTo(expectedVideoMetadataValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectVideoMetadataByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedVideoMetadataValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
