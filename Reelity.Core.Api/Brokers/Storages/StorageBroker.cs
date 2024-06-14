@@ -6,7 +6,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.Mapping;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -56,13 +56,6 @@ namespace Reelity.Core.Api.Brokers.Storages
             await broker.SaveChangesAsync();
 
             return @object;
-        }
-
-        public IQueryable<T> SelectAll<T>() where T : class
-        {
-            var broker = new StorageBroker(configuration);
-
-            return broker.Set<T>();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

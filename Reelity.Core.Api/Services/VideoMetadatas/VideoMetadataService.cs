@@ -6,7 +6,7 @@
 using Reelity.Core.Api.Brokers.DateTimes;
 using Reelity.Core.Api.Brokers.Loggings;
 using Reelity.Core.Api.Brokers.Storages;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using System.Linq;
 using System.Threading.Tasks;
 
