@@ -29,6 +29,9 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                    Parameter: nameof(videoMetadata.UpdatedDate)));
         }
 
+        private void ValidateVideoMetadataId(Guid videoMetadataId) =>
+             Validate((Rule: IsInvalid(videoMetadataId), Parameter: nameof(VideoMetadata.Id)));
+
         private void ValidateVideoMetadataNotNull(VideoMetadata videoMetadata)
         {
             if (videoMetadata is null)

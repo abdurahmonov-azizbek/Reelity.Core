@@ -24,7 +24,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.Id),
-                values: "Id is required");
+                values: "Id is required.");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
