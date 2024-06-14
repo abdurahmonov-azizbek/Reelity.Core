@@ -49,6 +49,8 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                 VideoMetadata maybeVideoMetadata =
                     await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
 
+                ValidateStorageVideoMetadata(maybeVideoMetadata, videoMetadataId);
+
                 return maybeVideoMetadata;
             });
 

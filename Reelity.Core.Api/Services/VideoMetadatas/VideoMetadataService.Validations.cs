@@ -29,6 +29,16 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                    Parameter: nameof(videoMetadata.UpdatedDate)));
         }
 
+        private static void ValidateStorageVideoMetadata(VideoMetadata mayVideoMetadata, Guid videoMetadataId)
+        {
+            if (mayVideoMetadata is null)
+            {
+                throw new NotFoundVideoMetadataException(
+                    $"Couldn't find language with id:{videoMetadataId}",
+                    videoMetadataId);
+            }
+        }
+
         private void ValidateVideoMetadataId(Guid videoMetadataId) =>
              Validate((Rule: IsInvalid(videoMetadataId), Parameter: nameof(VideoMetadata.Id)));
 
