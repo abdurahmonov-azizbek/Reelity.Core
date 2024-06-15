@@ -25,15 +25,15 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             Guid invalidVideoMetadataId = Guid.Empty;
 
             var invalidVideoMetadataException = new InvalidVideoMetadataException(
-                "VideoMetadata is invalid");
+                "Video Metadata is invalid.");
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.Id),
-                values: "Id is required");
+                values: "Id is required.");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
-                    message: "VideoMetadata validation error occured, fix the errors and try again.",
+                    message: "Video Metadata Validation Exception occured, fix the errors and try again.",
                     innerException: invalidVideoMetadataException);
 
             // when
