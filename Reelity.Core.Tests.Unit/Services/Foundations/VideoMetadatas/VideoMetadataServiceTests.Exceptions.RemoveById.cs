@@ -82,7 +82,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var expectedVideoMetadataDependencyException =
                 new VideoMetadataDependencyException(
-                    message: "VideoMetadata dependency error occured, contact support.",
+                    message: "VideoMetadata dependency error occured, fix the errors and try again.",
                     innerException: failedVideoMetadataStorageException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -108,7 +108,6 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
