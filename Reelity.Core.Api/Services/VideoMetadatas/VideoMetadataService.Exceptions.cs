@@ -55,6 +55,14 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedCompanyException = new LockedVideoMetadataException(
+                    message: "Video metadata is locked, try again later.",
+                    innerException: dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyException(lockedCompanyException);
+            }
             catch (DbUpdateException dbUpdateException)
             {
                 var failedVideoMetadataStorageException =

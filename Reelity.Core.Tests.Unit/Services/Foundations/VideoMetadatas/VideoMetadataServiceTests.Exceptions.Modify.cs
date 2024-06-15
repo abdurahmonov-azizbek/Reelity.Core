@@ -122,7 +122,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var lockedVideoMetadataException =
                 new LockedVideoMetadataException(
-                    message: "",
+                    message: "Video metadata is locked, try again later.",
                     innerException: databaseUpdateConcurrencyException);
 
             var expectedVideoMetadataDependencyException =
