@@ -64,6 +64,16 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             return filler;
         }
 
+        private VideoMetadata CreateRandomModifyVideoMetadata(DateTimeOffset dates)
+        {
+            int randomdaysInPast = GetRandomNegativeNumber();
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata(dates);
+
+            randomVideoMetadata.CreatedDate = randomVideoMetadata.CreatedDate.AddDays(randomdaysInPast);
+
+            return randomVideoMetadata;
+        }
+
         private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
         {
             return actualException =>
@@ -87,5 +97,8 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
         private static string GetRandomString() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+        private static int GetRandomNegativeNumber() =>
+         -1 * new IntRange(min: 2, max: 9).GetValue();
     }
 }
