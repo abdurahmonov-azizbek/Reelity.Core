@@ -38,13 +38,17 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                     return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
                 });
 
-        public async ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata)
-        {
-            var maybeVideoMetadata =
-                await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadata.Id);
+        public ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata) =>
+            TryCatch(async () =>
+            {
+                ValidateVideoMetadataOnModify(videoMetadata);
 
-            return await this.storageBroker.UpdateVideoMetadataAsync(videoMetadata);
-        }
+                var maybeVideoMetadata =
+                    await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadata.Id);
+
+                return await this.storageBroker.UpdateVideoMetadataAsync(videoMetadata);
+            });
+        
 
         public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
             TryCatch(() => this.storageBroker.SelectAllVideoMetadatas());

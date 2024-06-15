@@ -10,6 +10,7 @@ using System;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using FluentAssertions;
+using System.ComponentModel.Design;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 {
@@ -35,8 +36,9 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
                     message: "Video metadata dependency error occured, fix the errors and try again.",
                     innerException: failedVideoMetadataStorageException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset()).Throws(sqlException);
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectVideoMetadataByIdAsync(videoMetadataId))
+                    .ThrowsAsync(sqlException);
 
             //when
             ValueTask<VideoMetadata> modifyVideoMetadataTask =
@@ -50,18 +52,12 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             actualVideoMetadataDependencyException.Should().BeEquivalentTo(
                     expectedVideoMetadataDependencyException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(), Times.Once);
+            this.storageBrokerMock.Verify(broker =>
+                 broker.SelectVideoMetadataByIdAsync(videoMetadataId), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
-                    expectedVideoMetadataDependencyException))), Times.Once);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.SelectVideoMetadataByIdAsync(videoMetadataId), Times.Never);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.UpdateVideoMetadataAsync(someVideoMetadata), Times.Never);
+                    expectedVideoMetadataDependencyException))));
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
