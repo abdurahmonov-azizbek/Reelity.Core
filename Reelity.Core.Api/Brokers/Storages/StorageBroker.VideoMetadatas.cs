@@ -3,7 +3,7 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;

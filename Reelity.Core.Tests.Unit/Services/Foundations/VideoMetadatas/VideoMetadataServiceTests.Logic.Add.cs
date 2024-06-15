@@ -6,7 +6,7 @@
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using System.Threading.Tasks;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas

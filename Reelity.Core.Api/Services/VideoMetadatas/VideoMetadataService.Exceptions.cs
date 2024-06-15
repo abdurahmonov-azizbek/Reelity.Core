@@ -4,7 +4,7 @@
 // -------------------------------------------------------
 
 using Microsoft.Data.SqlClient;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using STX.EFxceptions.Abstractions.Models.Exceptions;
 using System;

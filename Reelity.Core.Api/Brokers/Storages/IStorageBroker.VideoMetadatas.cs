@@ -2,8 +2,7 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using Microsoft.Extensions.Hosting;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
