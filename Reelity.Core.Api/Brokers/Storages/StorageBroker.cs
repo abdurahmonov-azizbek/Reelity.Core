@@ -46,7 +46,7 @@ namespace Reelity.Core.Api.Brokers.Storages
             broker.Entry(@object).State = EntityState.Modified;
             await broker.SaveChangesAsync();
 
-            return @object;
+            return broker.Set<T>();
         }
         
         private async ValueTask<T> DeleteAsync<T>(T @object)
@@ -61,7 +61,6 @@ namespace Reelity.Core.Api.Brokers.Storages
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = this.configuration.GetConnectionString(name: "DefaultConnection");
-
             optionsBuilder.UseNpgsql(connectionString);
         }
     }

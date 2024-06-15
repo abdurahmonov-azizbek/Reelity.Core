@@ -17,5 +17,6 @@ namespace Reelity.Core.Api.Brokers.Storages
         ValueTask<VideoMetadata> SelectVideoMetadataByIdAsync(Guid videoMetadataId);
         ValueTask<VideoMetadata> UpdateVideoMetadataAsync(VideoMetadata videoMetadata);
         ValueTask<VideoMetadata> DeleteVideoMetadataAsync(VideoMetadata videoMetadata);
+        IQueryable<VideoMetadata> SelectAllVideoMetadatas();
     }
 }

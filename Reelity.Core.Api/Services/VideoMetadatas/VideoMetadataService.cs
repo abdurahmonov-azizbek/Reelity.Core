@@ -7,6 +7,7 @@ using Reelity.Core.Api.Brokers.DateTimes;
 using Reelity.Core.Api.Brokers.Loggings;
 using Reelity.Core.Api.Brokers.Storages;
 using Reelity.Core.Api.Models.Metadatas;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reelity.Core.Api.Services.VideoMetadatas
@@ -34,5 +35,8 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                     return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
                 });
-            }
+
+        public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
+            TryCatch(() => this.storageBroker.SelectAllVideoMetadatas());
+    }
 }
