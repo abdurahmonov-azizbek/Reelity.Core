@@ -4,6 +4,7 @@
 // -------------------------------------------------------
 
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using STX.EFxceptions.Abstractions.Models.Exceptions;
@@ -54,6 +55,15 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedVideoMetadataStorageException =
+                     new FailedVideoMetadataStorageException(
+                         message: "Failed Video metadata error occured, contact support.",
+                         innerException: dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedVideoMetadataStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedLanguageServiceException = new FailedVideoMetadataServiceException(
@@ -86,6 +96,17 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogServiceException(failedLanguageServiceException);
             }
+        }
+
+        private VideoMetadataDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var videoMetadataDependencyException = new VideoMetadataDependencyException(
+                message: "Video metadata dependency error occured, fix the errors and try again.",
+                innerException: exception);
+
+            this.loggingBroker.LogError(videoMetadataDependencyException);
+
+            return videoMetadataDependencyException;
         }
 
         private VideoMetadataServiceException CreateAndLogServiceException(Xeption exception)
