@@ -119,12 +119,12 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var failedVideoMetadataServiceException =
                new FailedVideoMetadataServiceException(
-                   message: "Failed Video metadata error occured, contact support.",
+                   message: "Failed Video metadata service error occured, please contact support",
                    innerException: seviceException);
 
             var expectedVideoMetadataServiceException =
                 new VideoMetadataServiceException(
-                    message: "VideoMEtadata service error occured, contact support.",
+                    message: "Video metadata service error occurred, contact support.",
                     innerException: failedVideoMetadataServiceException);
 
             this.storageBrokerMock.Setup(broker =>
