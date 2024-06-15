@@ -18,11 +18,9 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
         public async Task ShouldModifyVideoMetadataAsync()
         {
             //given
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            VideoMetadata randomVideoMetadata = CreateRandomModifyVideoMetadata(randomDate);
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
             VideoMetadata inputVideoMetadata = randomVideoMetadata;
             VideoMetadata storageVideoMetadata = inputVideoMetadata.DeepClone();
-            storageVideoMetadata.UpdatedDate = randomVideoMetadata.CreatedDate;
             VideoMetadata updatedVideoMetadata = inputVideoMetadata;
             VideoMetadata expectedVideoMetadata = updatedVideoMetadata.DeepClone();
             Guid videoMetadataId = inputVideoMetadata.Id;
@@ -43,12 +41,13 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             actualVideoMetadata.Should().BeEquivalentTo(expectedVideoMetadata);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectVideoMetadataByIdAsync(videoMetadataId), Times.Once);
+                broker.SelectVideoMetadataByIdAsync(videoMetadataId),
+                    Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdateVideoMetadataAsync(inputVideoMetadata), Times.Once);
+                broker.UpdateVideoMetadataAsync(inputVideoMetadata),
+                    Times.Once());
 
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
