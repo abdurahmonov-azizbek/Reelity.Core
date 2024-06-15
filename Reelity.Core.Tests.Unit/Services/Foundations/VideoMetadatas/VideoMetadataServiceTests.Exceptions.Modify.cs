@@ -156,5 +156,49 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfExceptionOccursAndLogItAsync()
+        {
+            // given 
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
+            VideoMetadata someVideoMetadata = randomVideoMetadata;
+            Guid videoMetadataId = someVideoMetadata.Id;
+            var serviceException = new Exception();
+
+            var failedVideoMetadataServiceException =
+                new FailedVideoMetadataServiceException(
+                    message: "Failed Video metadata service error occured, please contact support",
+                    innerException: serviceException);
+
+            var expectedVideoMetadataServiceException =
+                new VideoMetadataServiceException(
+                    message: "Video metadata service error occurred, contact support.",
+                    innerException: failedVideoMetadataServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                    broker.SelectVideoMetadataByIdAsync(videoMetadataId)).ThrowsAsync(serviceException);
+
+            // when 
+            ValueTask<VideoMetadata> modifyVideoMetadataTask =
+                this.videoMetadataService.ModifyVideoMetadataAsync(someVideoMetadata);
+
+            VideoMetadataServiceException actualVideoMetadataServiceException =
+                await Assert.ThrowsAsync<VideoMetadataServiceException>(modifyVideoMetadataTask.AsTask);
+
+            // then
+            actualVideoMetadataServiceException.Should()
+                .BeEquivalentTo(expectedVideoMetadataServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectVideoMetadataByIdAsync(videoMetadataId), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
