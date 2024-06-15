@@ -6,7 +6,7 @@
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using System.Linq;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
@@ -17,7 +17,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
         public void ShouldRetrieveAllVideoMetadatas()
         {
             // given
-            IQueryable<VideoMetadata> randomLanguages = CreateRandomLanguages();
+            IQueryable<VideoMetadata> randomLanguages = CreateRandomVideoMetadatas();
             IQueryable<VideoMetadata> storageLanguages = randomLanguages;
             IQueryable<VideoMetadata> expectedLanguages = storageLanguages.DeepClone();
 

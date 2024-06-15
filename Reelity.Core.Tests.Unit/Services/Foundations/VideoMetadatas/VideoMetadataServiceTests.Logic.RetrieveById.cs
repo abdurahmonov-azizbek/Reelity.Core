@@ -7,6 +7,7 @@ using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using Reelity.Core.Api.Models.VideoMetadatas;
+using System;
 using System.Threading.Tasks;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
@@ -14,31 +15,31 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
     public partial class VideoMetadataServiceTests
     {
         [Fact]
-        public async Task ShouldAddVideoMetadataAsync()
+        public async Task ShouldRetrieveVideoMetadataByIdAsync()
         {
             //given
+            Guid randomVideoMetadataId = Guid.NewGuid();
+            Guid inputVideoMetadataId = randomVideoMetadataId;
             VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
-            VideoMetadata inputVideoMetadata = randomVideoMetadata;
-            VideoMetadata persistedVideoMetadata = inputVideoMetadata;
+            VideoMetadata persistedVideoMetadata = randomVideoMetadata;
             VideoMetadata expectedVideoMetadata = persistedVideoMetadata.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-                broker.InsertVideoMetadataAsync(inputVideoMetadata))
+                broker.SelectVideoMetadataByIdAsync(inputVideoMetadataId))
                     .ReturnsAsync(persistedVideoMetadata);
 
             //when
             VideoMetadata actualVideoMetadata = await this.videoMetadataService
-                .AddVideoMetadataAsync(inputVideoMetadata);
+                .RetrieveVideoMetadataByIdAsync(inputVideoMetadataId);
 
-            //then  
-            actualVideoMetadata.Should().BeEquivalentTo(
-                expectedVideoMetadata);
+            //then
+            actualVideoMetadata.Should().BeEquivalentTo(expectedVideoMetadata);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.InsertVideoMetadataAsync(inputVideoMetadata),
-                    Times.Once);
+                broker.SelectVideoMetadataByIdAsync(inputVideoMetadataId), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

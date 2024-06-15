@@ -4,7 +4,7 @@
 // -------------------------------------------------------
 
 using Microsoft.Data.SqlClient;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using STX.EFxceptions.Abstractions.Models.Exceptions;
 using System;
@@ -33,6 +33,10 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             {
                 throw CreateAndLogValidationException(invalidVideoMetadataException);
             }
+            catch (NotFoundVideoMetadataException notFoundVideoMetadataException)
+            {
+                throw CreateAndLogValidationException(notFoundVideoMetadataException);
+            }
             catch (SqlException sqlException)
             {
                 FailedVideoMetadataStorageException failedVideoMetadataStorageException =
@@ -49,6 +53,14 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                     innerException: dublicateKeyException);
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedLanguageServiceException = new FailedVideoMetadataServiceException(
+                    message: "Failed Video metadata service error occured, please contact support",
+                    innerException: serviceException);
+
+                throw CreateAndLogServiceException(failedLanguageServiceException);
             }
         }
 

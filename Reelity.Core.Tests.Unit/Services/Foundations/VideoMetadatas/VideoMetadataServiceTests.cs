@@ -8,7 +8,7 @@ using Moq;
 using Reelity.Core.Api.Brokers.DateTimes;
 using Reelity.Core.Api.Brokers.Loggings;
 using Reelity.Core.Api.Brokers.Storages;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Services.VideoMetadatas;
 using System;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
-        private IQueryable<VideoMetadata> CreateRandomLanguages()
+        private IQueryable<VideoMetadata> CreateRandomVideoMetadatas()
         {
             return CreateRandomVideoMetadataFiller(date: GetRandomDateTimeOffset())
                 .Create(count: GetRandomNumber()).AsQueryable();

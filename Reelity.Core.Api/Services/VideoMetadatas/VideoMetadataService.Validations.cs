@@ -3,7 +3,7 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using System;
 
@@ -28,6 +28,19 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                         secondDateName: nameof(videoMetadata.CreatedDate)),
                    Parameter: nameof(videoMetadata.UpdatedDate)));
         }
+
+        private static void ValidateStorageVideoMetadata(VideoMetadata mayVideoMetadata, Guid videoMetadataId)
+        {
+            if (mayVideoMetadata is null)
+            {
+                throw new NotFoundVideoMetadataException(
+                    $"Couldn't find language with id:{videoMetadataId}",
+                    videoMetadataId);
+            }
+        }
+
+        private void ValidateVideoMetadataId(Guid videoMetadataId) =>
+             Validate((Rule: IsInvalid(videoMetadataId), Parameter: nameof(VideoMetadata.Id)));
 
         private void ValidateVideoMetadataNotNull(VideoMetadata videoMetadata)
         {

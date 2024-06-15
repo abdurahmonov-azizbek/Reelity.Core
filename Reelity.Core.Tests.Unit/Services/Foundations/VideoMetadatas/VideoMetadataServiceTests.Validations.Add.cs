@@ -5,7 +5,7 @@
 
 using FluentAssertions;
 using Moq;
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using System;
 using System.Threading.Tasks;

@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Reelity.Core.Api.Models.Metadatas
+namespace Reelity.Core.Api.Models.VideoMetadatas
 {
     public class VideoMetadata
     {

@@ -3,7 +3,7 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using Reelity.Core.Api.Models.Metadatas;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +29,5 @@ namespace Reelity.Core.Api.Brokers.Storages
 
         public async ValueTask<VideoMetadata> DeleteVideoMetadataAsync(VideoMetadata videoMetadata) =>
             await DeleteAsync(videoMetadata);
-
-        public IQueryable<VideoMetadata> SelectAllVideoMetadatas() =>
-            SelectAll<VideoMetadata>();
     }
 }
