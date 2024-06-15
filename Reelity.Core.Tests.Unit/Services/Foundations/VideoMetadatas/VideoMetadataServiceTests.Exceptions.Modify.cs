@@ -3,14 +3,15 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Threading.Tasks;
-using System;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
-using FluentAssertions;
-using System.ComponentModel.Design;
+using System;
+using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 {
@@ -62,6 +63,52 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnModifyIfDatabaseUpdateExceptionOccursAndLogItAsync()
+        {
+            // given 
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
+            VideoMetadata someVideoMetadata = randomVideoMetadata;
+            Guid videoMetadataId = someVideoMetadata.Id;
+            var databaseUpdateException = new DbUpdateException();
+
+            var failedVideoMetadataStorageException =
+                new FailedVideoMetadataStorageException(
+                    message: "Failed Video metadata error occured, contact support.",
+                    innerException: databaseUpdateException);
+
+            var expectedVideoMetadataDependencyException =
+                new VideoMetadataDependencyException(
+                    message: "Video metadata dependency error occured, fix the errors and try again.",
+                    innerException: failedVideoMetadataStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectVideoMetadataByIdAsync(videoMetadataId))
+                    .ThrowsAsync(databaseUpdateException);
+
+            // when 
+            ValueTask<VideoMetadata> modifyVideoMetadataTask =
+                this.videoMetadataService.ModifyVideoMetadataAsync(someVideoMetadata);
+
+            VideoMetadataDependencyException actualVideoMetadataDependencyException =
+                await Assert.ThrowsAsync<VideoMetadataDependencyException>(modifyVideoMetadataTask.AsTask);
+
+            // then
+            actualVideoMetadataDependencyException.Should()
+                .BeEquivalentTo(expectedVideoMetadataDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectVideoMetadataByIdAsync(videoMetadataId), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedVideoMetadataDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
