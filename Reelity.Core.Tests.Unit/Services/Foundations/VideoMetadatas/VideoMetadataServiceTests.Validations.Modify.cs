@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using FluentAssertions;
+using System;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 {
@@ -93,6 +94,55 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             // then
             actualVideoMetadataValidationException.Should()
                 .BeEquivalentTo(expectedVideoMetadataValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedVideoMetadataValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfVideoMetadataDoesNotExistAndLogItAsync()
+        {
+            // given
+            int negativeMinutes = GetRandomNegativeNumber();
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata(dateTime);
+            VideoMetadata nonExistVideoMetadata = randomVideoMetadata;
+            nonExistVideoMetadata.CreatedDate = dateTime.AddMinutes(negativeMinutes);
+            VideoMetadata nullCompany = null;
+
+            var notFoundVideoMetadataValidationException =
+               new NotFoundVideoMetadataException(
+                   $"Couldn't find language with id:{nonExistVideoMetadata.Id}",
+                   nonExistVideoMetadata.Id);
+
+            var expectedVideoMetadataValidationException =
+                new VideoMetadataValidationException(
+                    message: "Video Metadata Validation Exception occured, fix the errors and try again.",
+                    innerException: notFoundVideoMetadataValidationException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectVideoMetadataByIdAsync(nonExistVideoMetadata.Id))
+                    .ReturnsAsync(nullCompany);
+
+            // when
+            ValueTask<VideoMetadata> modifyVideoMetadataTask =
+                this.videoMetadataService.ModifyVideoMetadataAsync(nonExistVideoMetadata);
+
+            VideoMetadataValidationException actualVideoMetadataValidationException =
+                await Assert.ThrowsAsync<VideoMetadataValidationException>(
+                    modifyVideoMetadataTask.AsTask);
+
+            // then
+            actualVideoMetadataValidationException.Should()
+                .BeEquivalentTo(expectedVideoMetadataValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectVideoMetadataByIdAsync(nonExistVideoMetadata.Id), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
