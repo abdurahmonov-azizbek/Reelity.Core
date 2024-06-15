@@ -67,7 +67,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             if (maybeVideoMetadata is null)
             {
                 throw new NotFoundVideoMetadataException(
-                    message: $"Couldn't find language with id {videoMetadataId}",
+                    message: $"Couldn't find video metadata with id {videoMetadataId}",
                     videoMetadataId: videoMetadataId);
             }
         }
@@ -77,7 +77,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             if (mayVideoMetadata is null)
             {
                 throw new NotFoundVideoMetadataException(
-                    $"Couldn't find language with id:{videoMetadataId}",
+                    $"Couldn't find video metadata with id {videoMetadataId}",
                     videoMetadataId);
             }
         }
