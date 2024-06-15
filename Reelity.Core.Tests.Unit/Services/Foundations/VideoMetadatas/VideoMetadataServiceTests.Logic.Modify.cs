@@ -27,9 +27,6 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             VideoMetadata expectedVideoMetadata = updatedVideoMetadata.DeepClone();
             Guid videoMetadataId = inputVideoMetadata.Id;
 
-            this.dateTimeBrokerMock.Setup(broker =>
-               broker.GetCurrentDateTimeOffset()).Returns(randomDate);
-
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectVideoMetadataByIdAsync(videoMetadataId))
                     .ReturnsAsync(storageVideoMetadata);
@@ -44,9 +41,6 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             //then
             actualVideoMetadata.Should().BeEquivalentTo(expectedVideoMetadata);
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectVideoMetadataByIdAsync(videoMetadataId), Times.Once);
