@@ -4,6 +4,7 @@
 // -------------------------------------------------------
 
 using FluentAssertions;
+using Force.DeepCloner;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
 using Reelity.Core.Api.Models.VideoMetadatas;
@@ -17,34 +18,39 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
         [Fact]
         public async Task ShuouldRemoveVideoMetadataByIdAsync()
         {
-            //given
+            // given
+            Guid randomVideoMetadataId = Guid.NewGuid();
+            Guid inputVideoMetadataId = randomVideoMetadataId;
             VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
-            Guid videoMetadataId = randomVideoMetadata.Id;
             VideoMetadata storageVideoMetadata = randomVideoMetadata;
-            VideoMetadata expectedVideoMetadata = storageVideoMetadata;
+            VideoMetadata expectedInputVideoMetadata = storageVideoMetadata;
+            VideoMetadata deletedVideoMetadata = expectedInputVideoMetadata;
+            VideoMetadata expectedVideoMetadata = deletedVideoMetadata.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectVideoMetadataByIdAsync(videoMetadataId))
-                .ReturnsAsync(storageVideoMetadata);
+                broker.SelectVideoMetadataByIdAsync(inputVideoMetadataId))
+                    .ReturnsAsync(storageVideoMetadata);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.DeleteVideoMetadataAsync(storageVideoMetadata))
-                .ReturnsAsync(expectedVideoMetadata);
+                broker.DeleteVideoMetadataAsync(expectedInputVideoMetadata))
+                    .ReturnsAsync(deletedVideoMetadata);
 
-            //when
-            VideoMetadata actualVideoMetadata =
-                await this.videoMetadataService.RemoveVideoMetadataByIdAsync(videoMetadataId);
+            // when
+            VideoMetadata actualVideoMetadata = await this.videoMetadataService
+                .RemoveVideoMetadataByIdAsync(inputVideoMetadataId);
 
-            //then
+            // then
             actualVideoMetadata.Should().BeEquivalentTo(expectedVideoMetadata);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectVideoMetadataByIdAsync(videoMetadataId),
-                Times.Once);
+                broker.SelectVideoMetadataByIdAsync(inputVideoMetadataId), Times.Once);
 
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteVideoMetadataAsync(expectedInputVideoMetadata), Times.Once);
+
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -96,5 +96,17 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
             invalidVideoMetadataException.ThrowIfContainsErrors();
         }
+
+        private static void ValidateVideoMetadataId(Guid videoMetadataId) =>
+            Validate((Rule: IsInvalid(videoMetadataId), Parameter: nameof(VideoMetadata.Id)));
+
+        private static void ValidateStorageVideoMetadataExists(VideoMetadata maybeVideoMetadata, Guid videoMetadataId)
+        {
+            if (maybeVideoMetadata is null)
+            {
+                throw new NotFoundVideoMetadataException(
+                    message: $"Couldn't find VideoMetadata with id: {videoMetadataId}.");
+            }
+        }
     }
 }

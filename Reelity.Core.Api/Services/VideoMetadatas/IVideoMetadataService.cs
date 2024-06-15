@@ -4,6 +4,7 @@
 // -------------------------------------------------------
 
 using Reelity.Core.Api.Models.VideoMetadatas;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
     {
         ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata);
         IQueryable<VideoMetadata> RetrieveAllVideoMetadatas();
-
+        ValueTask<VideoMetadata> RemoveVideoMetadataByIdAsync(Guid videoMetadataId);
+        ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId); 
     }
 }
