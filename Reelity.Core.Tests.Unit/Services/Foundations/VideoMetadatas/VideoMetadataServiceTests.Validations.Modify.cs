@@ -79,7 +79,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
-                    message: "Video Metadata Validatiured, fix the errors and try again.",
+                    message: "Video Metadata Validation Exception occured, fix the errors and try again.",
                     innerException: invalidVideoMetadataException);
 
             // when
