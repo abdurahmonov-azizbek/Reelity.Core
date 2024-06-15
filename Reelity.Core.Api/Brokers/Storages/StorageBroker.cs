@@ -5,8 +5,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.Mapping;
-using Reelity.Core.Api.Models.VideoMetadatas;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,23 +30,23 @@ namespace Reelity.Core.Api.Brokers.Storages
 
         private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class =>
            await FindAsync<T>(objectIds);
-           
+
         public IQueryable<T> SelectAll<T>() where T : class
         {
             var broker = new StorageBroker(this.configuration);
 
             return broker.Set<T>();
         }
-        
+
         public async ValueTask<T> UpdateAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);
             broker.Entry(@object).State = EntityState.Modified;
             await broker.SaveChangesAsync();
 
-            return broker.Set<T>();
+            return @object;
         }
-        
+
         private async ValueTask<T> DeleteAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);
