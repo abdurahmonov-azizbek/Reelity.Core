@@ -12,7 +12,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http.OData;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Reelity.Core.Api.Controllers
 {
@@ -63,7 +62,7 @@ namespace Reelity.Core.Api.Controllers
         {
             try
             {
-                IQueryable<VideoMetadata> allVideoMetadatas = 
+                IQueryable<VideoMetadata> allVideoMetadatas =
                     this.videoMetadataService.RetrieveAllVideoMetadatas();
 
                 return Ok(allVideoMetadatas);
