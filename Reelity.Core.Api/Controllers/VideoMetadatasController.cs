@@ -8,6 +8,7 @@ using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using Reelity.Core.Api.Services.VideoMetadatas;
 using RESTFulSense.Controllers;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http.OData;
@@ -94,6 +95,43 @@ namespace Reelity.Core.Api.Controllers
             catch (VideoMetadataValidationException videoMetadataValidationException)
             {
                 return BadRequest(videoMetadataValidationException.InnerException);
+            }
+            catch (VideoMetadataDependencyException videoMetadataDependencyException)
+            {
+                return InternalServerError(videoMetadataDependencyException.InnerException);
+            }
+            catch (VideoMetadataServiceException videoMetadataServiceException)
+            {
+                return InternalServerError(videoMetadataServiceException.InnerException);
+            }
+        }
+
+        [HttpDelete]
+        public async ValueTask<ActionResult<VideoMetadata>> DeleteVideoMetadataByIdAsync(Guid id)
+        {
+            try
+            {
+                VideoMetadata deletedVideoMetadata = await this.videoMetadataService.DeleteVideoMetadataAsync(id);
+
+                return Ok(deletedVideoMetadata);
+            }
+            catch (VideoMetadataValidationException videoMetadataValidationException)
+                  when (videoMetadataValidationException.InnerException is NotFoundVideoMetadataException)
+            {
+                return NotFound(videoMetadataValidationException.InnerException);
+            }
+            catch (VideoMetadataValidationException videoMetadataValidationException)
+            {
+                return BadRequest(videoMetadataValidationException.InnerException);
+            }
+            catch (VideoMetadataDependencyValidationException videoMetadataDependencyValidationException)
+                when (videoMetadataDependencyValidationException.InnerException is LockedVideoMetadataException)
+            {
+                return Locked(videoMetadataDependencyValidationException.InnerException);
+            }
+            catch (VideoMetadataDependencyValidationException videoMetadataDependencyValidationException)
+            {
+                return BadRequest(videoMetadataDependencyValidationException.InnerException);
             }
             catch (VideoMetadataDependencyException videoMetadataDependencyException)
             {

@@ -39,6 +39,11 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                     return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
                 });
 
+        public ValueTask<VideoMetadata> DeleteVideoMetadataAsync(Guid videoMetadataId)
+        {
+            throw new NotImplementedException();
+        }
+
         public ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata) =>
             TryCatch(async () =>
             {
