@@ -70,11 +70,11 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var notFoundVideoMetadataException =
                 new NotFoundVideoMetadataException(
-                    message: $"Couldn't find VideoMetadata with id: {inputVideoMetadataId}.");
+                    message: $"Couldn't find VideoMetadata with id.");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
-                    message: "Vide Metadata Validation Exception occured, fix the errors and try again.",
+                    message: "Video Metadata Validation Exception occured, fix the errors and try again.",
                     innerException: notFoundVideoMetadataException);
 
             this.storageBrokerMock.Setup(broker =>
