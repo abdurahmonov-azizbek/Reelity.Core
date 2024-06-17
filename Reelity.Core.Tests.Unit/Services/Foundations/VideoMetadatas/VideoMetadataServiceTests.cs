@@ -50,6 +50,8 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
         private static VideoMetadata CreateRandomVideoMetadata(DateTimeOffset date) =>
             CreateRandomVideoMetadataFiller(date).Create();
 
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         public static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();

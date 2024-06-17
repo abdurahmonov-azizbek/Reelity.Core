@@ -3,10 +3,12 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
-using STX.EFxceptions.Abstractions.Models.Exceptions;
+using STX.EFxceptions.Abstractions.Models.Exceptions; 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,13 +52,36 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedJobException = new LockedVideoMetadataException(
+                    message: "VideoMetadata is locked, please try again.", 
+                    innerException: dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedJobException);
+            }
+            catch (NotFoundVideoMetadataException notFoundVideoMetadataException)
+            {
+                var failedNotFoundVideoMetadataException = new NotFoundVideoMetadataException(
+                  message: $"Couldn't find VideoMetadata with id.");
+
+                throw CreateAndLogValidationException(failedNotFoundVideoMetadataException);
+            }
+            catch (Exception serviceException)
+            {
+                var failedLanguageServiceException = new FailedVideoMetadataServiceException(
+                    message: "Failed Video metadata service error occured, please contact support",
+                    innerException: serviceException);
+
+                throw CreateAndLogServiceException(failedLanguageServiceException);
+            }
         }
 
-        private IQueryable<VideoMetadata> TryCatch(ReturningVideoMetadatasFunction returningVideoMetadataFunction)
+        private IQueryable<VideoMetadata> TryCatch(ReturningVideoMetadatasFunction returningVideoMetadatasFunction)
         {
             try
             {
-                return returningVideoMetadataFunction();
+                return returningVideoMetadatasFunction();
             }
             catch (SqlException sqlException)
             {
@@ -90,7 +115,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
         private Exception CreateAndLogDependencyValidationException(Xeption exception)
         {
             var videoMetadataDependencyValidationException = new VideoMetadataDependencyValidationException(
-                message: "Video metadata Dependency validation error occured , fix the errors and try again.",
+                message: "Video metadata dependency error occured, fix the errors and try again.",
                 innerException: exception);
 
             this.loggingBroker.LogError(videoMetadataDependencyValidationException);
@@ -115,7 +140,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
         {
             var videoMetadataValidationException = new VideoMetadataValidationException(
                 "Video Metadata Validation Exception occured, fix the errors and try again.",
-                    innerException: exception);
+                 innerException: exception);
 
             this.loggingBroker.LogError(videoMetadataValidationException);
 
