@@ -4,12 +4,14 @@
 // -------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Reelity.Core.Api.Services.VideoMetadatas;
-using RESTFulSense.Controllers;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using System.Threading.Tasks;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
+using Reelity.Core.Api.Services.VideoMetadatas;
+using RESTFulSense.Controllers;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Http.OData;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Reelity.Core.Api.Controllers
 {
@@ -47,6 +49,27 @@ namespace Reelity.Core.Api.Controllers
             catch (VideoMetadataDependencyValidationException videoMetadataDependencyValidationException)
             {
                 return BadRequest(videoMetadataDependencyValidationException.InnerException);
+            }
+            catch (VideoMetadataServiceException videoMetadataServiceException)
+            {
+                return InternalServerError(videoMetadataServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        [EnableQuery]
+        public ActionResult<IQueryable<VideoMetadata>> GetAllVideoMetadatas()
+        {
+            try
+            {
+                IQueryable<VideoMetadata> allVideoMetadatas = 
+                    this.videoMetadataService.RetrieveAllVideoMetadatas();
+
+                return Ok(allVideoMetadatas);
+            }
+            catch (VideoMetadataDependencyException videoMetadataDependencyException)
+            {
+                return InternalServerError(videoMetadataDependencyException.InnerException);
             }
             catch (VideoMetadataServiceException videoMetadataServiceException)
             {
