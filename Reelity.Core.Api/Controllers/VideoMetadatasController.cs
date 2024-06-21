@@ -110,7 +110,7 @@ namespace Reelity.Core.Api.Controllers
         {
             try
             {
-                VideoMetadata deletedVideoMetadata = await this.videoMetadataService.DeleteVideoMetadataAsync(id);
+                VideoMetadata deletedVideoMetadata = await this.videoMetadataService.RemoveVideoMetadataByIdAsync(id);
 
                 return Ok(deletedVideoMetadata);
             }

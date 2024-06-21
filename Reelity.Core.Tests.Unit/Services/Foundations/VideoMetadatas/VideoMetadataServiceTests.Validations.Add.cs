@@ -19,7 +19,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
         {
             //given
             VideoMetadata nullVideoMetadata = null;
-            var nullVideoMetadataException = new NullVideoMetadataException("VideoMetadata is null.");
+            var nullVideoMetadataException = new NullVideoMetadataException("Video Metadata is null.");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(

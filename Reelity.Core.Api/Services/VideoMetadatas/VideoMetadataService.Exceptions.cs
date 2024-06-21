@@ -3,12 +3,11 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
-using STX.EFxceptions.Abstractions.Models.Exceptions; 
+using STX.EFxceptions.Abstractions.Models.Exceptions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,21 +58,10 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedJobException = new LockedVideoMetadataException(
-                    message: "VideoMetadata is locked, please try again.", 
+                    message: "VideoMetadata is locked, please try again.",
                     innerException: dbUpdateConcurrencyException);
 
                 throw CreateAndLogDependencyValidationException(lockedJobException);
-            }
-            catch (NotFoundVideoMetadataException notFoundVideoMetadataException)
-            {
-                var failedNotFoundVideoMetadataException = new NotFoundVideoMetadataException(
-                  message: $"Couldn't find VideoMetadata with id.");
-
-                var lockedCompanyException = new LockedVideoMetadataException(
-                    message: "Video metadata is locked, try again later.",
-                    innerException: dbUpdateConcurrencyException);
-
-                throw CreateAndLogDependencyException(lockedCompanyException);
             }
             catch (DbUpdateException dbUpdateException)
             {
@@ -167,10 +155,8 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             Xeption exception)
         {
             var videoMetadataValidationException = new VideoMetadataValidationException(
-                "Video Metadata Validation Exception occured, fix the errors and try again.",
-                 innerException: exception);
-                  message: "Video Metadata Validation Exception occured, fix the errors and try again.",
-                  innerException: exception);
+                message: "Video Metadata Validation Exception occured, fix the errors and try again.",
+                innerException: exception);
 
             this.loggingBroker.LogError(videoMetadataValidationException);
 

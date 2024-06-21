@@ -62,8 +62,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var notFoundVideoMetadataValidationException =
                 new NotFoundVideoMetadataException(
-                    $"Couldn't find video metadata with id {someVideoMetadataId}",
-                    someVideoMetadataId);
+                    $"Couldn't find video metadata with id {someVideoMetadataId}");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(

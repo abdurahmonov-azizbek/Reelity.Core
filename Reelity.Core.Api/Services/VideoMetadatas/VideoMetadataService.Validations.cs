@@ -6,7 +6,6 @@
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using System;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Reelity.Core.Api.Services.VideoMetadatas
 {
@@ -52,7 +51,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             VideoMetadata inputVideoMetadata,
             VideoMetadata storageVideoMetadata)
         {
-            ValidateStorageCompanyExists(storageVideoMetadata, inputVideoMetadata.Id);
+            this.ValidateStorageVideoMetadataExists(storageVideoMetadata, inputVideoMetadata.Id);
 
             Validate(
                 (Rule: IsNotSame(
@@ -62,13 +61,12 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                     Parameter: nameof(VideoMetadata.CreatedDate)));
         }
 
-        private void ValidateStorageCompanyExists(VideoMetadata maybeVideoMetadata, Guid videoMetadataId)
+        private void ValidateStorageVideoMetadataExists(VideoMetadata maybeVideoMetadata, Guid videoMetadataId)
         {
             if (maybeVideoMetadata is null)
             {
                 throw new NotFoundVideoMetadataException(
-                    message: $"Couldn't find video metadata with id {videoMetadataId}",
-                    videoMetadataId: videoMetadataId);
+                    message: $"Couldn't find video metadata with id {videoMetadataId}");
             }
         }
 
@@ -77,8 +75,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             if (mayVideoMetadata is null)
             {
                 throw new NotFoundVideoMetadataException(
-                    $"Couldn't find video metadata with id {videoMetadataId}",
-                    videoMetadataId);
+                    $"Couldn't find video metadata with id {videoMetadataId}");
             }
         }
 
@@ -151,18 +148,6 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             }
 
             invalidVideoMetadataException.ThrowIfContainsErrors();
-        }
-
-        private static void ValidateVideoMetadataId(Guid videoMetadataId) =>
-            Validate((Rule: IsInvalid(videoMetadataId), Parameter: nameof(VideoMetadata.Id)));
-
-        private static void ValidateStorageVideoMetadataExists(VideoMetadata maybeVideoMetadata, Guid videoMetadataId)
-        {
-            if (maybeVideoMetadata is null)
-            {
-                throw new NotFoundVideoMetadataException(
-                    message: $"Couldn't find VideoMetadata with id: {videoMetadataId}.");
-            }
         }
     }
 }

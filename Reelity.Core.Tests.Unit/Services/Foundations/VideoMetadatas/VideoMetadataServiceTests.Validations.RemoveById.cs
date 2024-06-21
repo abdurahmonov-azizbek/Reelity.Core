@@ -3,16 +3,12 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using Moq;
-using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
-using Reelity.Core.Api.Models.VideoMetadatas;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using FluentAssertions;
+using Moq;
+using Reelity.Core.Api.Models.VideoMetadatas;
+using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
+using System;
+using System.Threading.Tasks;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 {
@@ -70,7 +66,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var notFoundVideoMetadataException =
                 new NotFoundVideoMetadataException(
-                    message: $"Couldn't find VideoMetadata with id.");
+                    message: $"Couldn't find video metadata with id {randomVideoMetadataId}");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
@@ -105,5 +101,5 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
         }
 
     }
-    
+
 }

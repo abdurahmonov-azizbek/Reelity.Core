@@ -3,13 +3,11 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using FluentAssertions;
 using Moq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using System.Threading.Tasks;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
-using FluentAssertions;
-using System;
+using System.Threading.Tasks;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 {
@@ -20,7 +18,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
         {
             // given
             VideoMetadata nullVideoMetadata = null;
-            var nullVideoMetadataException = new NullVideoMetadataException("VideoMetadata is null.");
+            var nullVideoMetadataException = new NullVideoMetadataException("Video Metadata is null.");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
@@ -29,7 +27,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
 
             // when
-            ValueTask<VideoMetadata> modifyCompanyTask = 
+            ValueTask<VideoMetadata> modifyCompanyTask =
                 this.videoMetadataService.ModifyVideoMetadataAsync(nullVideoMetadata);
 
             VideoMetadataValidationException actualVideoMetadataValidationException =
@@ -114,8 +112,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var notFoundVideoMetadataException =
                 new NotFoundVideoMetadataException(
-                    message: $"Couldn't find video metadata with id {nonExistVideoMetadata.Id}",
-                    nonExistVideoMetadata.Id);
+                    message: $"Couldn't find video metadata with id {nonExistVideoMetadata.Id}");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(

@@ -75,7 +75,7 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var expectedVideoMetadataDependencyValidationException =
                 new VideoMetadataDependencyValidationException(
-                    message: "Video metadata Dependency validation error occured , fix the errors and try again.",
+                    message: "Video metadata dependency error occured, fix the errors and try again.",
                     innerException: alreadyExistsVideoMetadataException);
 
             this.storageBrokerMock.Setup(broker =>

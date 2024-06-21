@@ -16,7 +16,6 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
         IQueryable<VideoMetadata> RetrieveAllVideoMetadatas();
         ValueTask<VideoMetadata> RemoveVideoMetadataByIdAsync(Guid videoMetadataId);
         ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId); 
-        ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId);
         ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata);
     }
 }

@@ -5,7 +5,7 @@ namespace Reelity.Core.Api.Models.VideoMetadatas.Exceptions
 {
     public class NotFoundVideoMetadataException : Xeption
     {
-        public NotFoundVideoMetadataException(string message,Guid videoMetadataId)
+        public NotFoundVideoMetadataException(string message)
             : base(message: message)
         { }
     }
