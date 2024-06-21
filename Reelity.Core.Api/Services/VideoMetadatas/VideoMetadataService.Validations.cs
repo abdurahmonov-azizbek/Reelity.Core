@@ -6,6 +6,7 @@
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using System;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Reelity.Core.Api.Services.VideoMetadatas
 {
@@ -28,6 +29,61 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                         secondDateName: nameof(videoMetadata.CreatedDate)),
                    Parameter: nameof(videoMetadata.UpdatedDate)));
         }
+
+        private void ValidateVideoMetadataOnModify(VideoMetadata videoMetadata)
+        {
+            ValidateVideoMetadataNotNull(videoMetadata);
+
+            Validate(
+                (Rule: IsInvalid(videoMetadata.Id), Parameter: nameof(VideoMetadata.Id)),
+                (Rule: IsInvalid(videoMetadata.Title), Parameter: nameof(VideoMetadata.Title)),
+                (Rule: IsInvalid(videoMetadata.BlobPath), Parameter: nameof(VideoMetadata.BlobPath)),
+                (Rule: IsInvalid(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
+                (Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)),
+
+               (Rule: IsNotSame(
+                        firstDate: videoMetadata.UpdatedDate,
+                        secondDate: videoMetadata.CreatedDate,
+                        secondDateName: nameof(videoMetadata.CreatedDate)),
+                Parameter: nameof(videoMetadata.UpdatedDate)));
+        }
+
+        private void ValidateAgainstStorageOnModify(
+            VideoMetadata inputVideoMetadata,
+            VideoMetadata storageVideoMetadata)
+        {
+            ValidateStorageCompanyExists(storageVideoMetadata, inputVideoMetadata.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputVideoMetadata.CreatedDate,
+                    secondDate: storageVideoMetadata.CreatedDate,
+                    secondDateName: nameof(VideoMetadata.CreatedDate)),
+                    Parameter: nameof(VideoMetadata.CreatedDate)));
+        }
+
+        private void ValidateStorageCompanyExists(VideoMetadata maybeVideoMetadata, Guid videoMetadataId)
+        {
+            if (maybeVideoMetadata is null)
+            {
+                throw new NotFoundVideoMetadataException(
+                    message: $"Couldn't find video metadata with id {videoMetadataId}",
+                    videoMetadataId: videoMetadataId);
+            }
+        }
+
+        private static void ValidateStorageVideoMetadata(VideoMetadata mayVideoMetadata, Guid videoMetadataId)
+        {
+            if (mayVideoMetadata is null)
+            {
+                throw new NotFoundVideoMetadataException(
+                    $"Couldn't find video metadata with id {videoMetadataId}",
+                    videoMetadataId);
+            }
+        }
+
+        private void ValidateVideoMetadataId(Guid videoMetadataId) =>
+             Validate((Rule: IsInvalid(videoMetadataId), Parameter: nameof(VideoMetadata.Id)));
 
         private void ValidateVideoMetadataNotNull(VideoMetadata videoMetadata)
         {

@@ -8,7 +8,7 @@ using Xeptions;
 
 namespace Reelity.Core.Api.Models.VideoMetadatas.Exceptions
 {
-    public class LockedVideoMetadataException: Xeption
+    public class LockedVideoMetadataException : Xeption
     {
         public LockedVideoMetadataException(string message, Exception innerException)
             : base(message: message, innerException: innerException)

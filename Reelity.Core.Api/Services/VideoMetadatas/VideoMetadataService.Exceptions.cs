@@ -35,9 +35,13 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             {
                 throw CreateAndLogValidationException(invalidVideoMetadataException);
             }
+            catch (NotFoundVideoMetadataException notFoundVideoMetadataException)
+            {
+                throw CreateAndLogValidationException(notFoundVideoMetadataException);
+            }
             catch (SqlException sqlException)
             {
-                FailedVideoMetadataStorageException failedVideoMetadataStorageException =
+                var failedVideoMetadataStorageException =
                     new FailedVideoMetadataStorageException(
                         message: "Failed Video metadata error occured, contact support.",
                         innerException: sqlException);
@@ -65,7 +69,20 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                 var failedNotFoundVideoMetadataException = new NotFoundVideoMetadataException(
                   message: $"Couldn't find VideoMetadata with id.");
 
-                throw CreateAndLogValidationException(failedNotFoundVideoMetadataException);
+                var lockedCompanyException = new LockedVideoMetadataException(
+                    message: "Video metadata is locked, try again later.",
+                    innerException: dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyException(lockedCompanyException);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedVideoMetadataStorageException =
+                     new FailedVideoMetadataStorageException(
+                         message: "Failed Video metadata error occured, contact support.",
+                         innerException: dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedVideoMetadataStorageException);
             }
             catch (Exception serviceException)
             {
@@ -101,11 +118,22 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             }
         }
 
+        private VideoMetadataDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var videoMetadataDependencyException = new VideoMetadataDependencyException(
+                message: "Video metadata dependency error occured, fix the errors and try again.",
+                innerException: exception);
+
+            this.loggingBroker.LogError(videoMetadataDependencyException);
+
+            return videoMetadataDependencyException;
+        }
+
         private VideoMetadataServiceException CreateAndLogServiceException(Xeption exception)
         {
             var languageServiceException = new VideoMetadataServiceException(
-                "Video metadata service error occurred, contact support.",
-                exception);
+                message: "Video metadata service error occurred, contact support.",
+                innerException: exception);
 
             this.loggingBroker.LogError(languageServiceException);
 
@@ -127,8 +155,8 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             Xeption exception)
         {
             var videoMetadataDependencyException = new VideoMetadataDependencyException(
-                "Video metadata dependency error occured, fix the errors and try again.",
-                    innerException: exception);
+                message: "Video metadata dependency error occured, fix the errors and try again.",
+                innerException: exception);
 
             this.loggingBroker.LogCritical(videoMetadataDependencyException);
 
@@ -141,6 +169,8 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             var videoMetadataValidationException = new VideoMetadataValidationException(
                 "Video Metadata Validation Exception occured, fix the errors and try again.",
                  innerException: exception);
+                  message: "Video Metadata Validation Exception occured, fix the errors and try again.",
+                  innerException: exception);
 
             this.loggingBroker.LogError(videoMetadataValidationException);
 

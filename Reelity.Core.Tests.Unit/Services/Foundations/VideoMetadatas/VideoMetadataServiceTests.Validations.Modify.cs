@@ -3,21 +3,22 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using FluentAssertions;
 using Moq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Threading.Tasks;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
+using FluentAssertions;
 using System;
-using System.Threading.Tasks;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 {
     public partial class VideoMetadataServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnAddIfIsNullAndLogError()
+        public async Task ShouldThrowValidationExceptionOnModifyIfVideoMetadataIsNullAndLogItAsync()
         {
-            //given
+            // given
             VideoMetadata nullVideoMetadata = null;
             var nullVideoMetadataException = new NullVideoMetadataException("VideoMetadata is null.");
 
@@ -26,28 +27,32 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
                     message: "Video Metadata Validation Exception occured, fix the errors and try again.",
                     innerException: nullVideoMetadataException);
 
-            //when
-            ValueTask<VideoMetadata> addVideoMetadata =
-                this.videoMetadataService.AddVideoMetadataAsync(nullVideoMetadata);
+
+            // when
+            ValueTask<VideoMetadata> modifyCompanyTask = 
+                this.videoMetadataService.ModifyVideoMetadataAsync(nullVideoMetadata);
 
             VideoMetadataValidationException actualVideoMetadataValidationException =
-                await Assert.ThrowsAsync<VideoMetadataValidationException>(addVideoMetadata.AsTask);
+                await Assert.ThrowsAsync<VideoMetadataValidationException>(modifyCompanyTask.AsTask);
 
-            //then
+            // then
             actualVideoMetadataValidationException.Should()
                 .BeEquivalentTo(expectedVideoMetadataValidationException);
 
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()), Times.Never);
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedVideoMetadataValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task ShouldThrowValidationExceptionOnAddIfVideoMetadataIsInvalidDataAndLogItAsync(string invalidData)
+        public async Task ShouldThrowValidationExceptionOnModifyIfVideoMetadataIsInvalidAndLogItAsync(string invalidData)
         {
             //given
             var invalidVideoMetadata = new VideoMetadata()
@@ -78,83 +83,71 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
                     message: "Video Metadata Validation Exception occured, fix the errors and try again.",
                     innerException: invalidVideoMetadataException);
 
-            //when
-            ValueTask<VideoMetadata> addVideoMetadataTask =
-                this.videoMetadataService.AddVideoMetadataAsync(invalidVideoMetadata);
+            // when
+            ValueTask<VideoMetadata> modifyVideoMetadataTask =
+                this.videoMetadataService.ModifyVideoMetadataAsync(invalidVideoMetadata);
 
             VideoMetadataValidationException actualVideoMetadataValidationException =
-                await Assert.ThrowsAsync<VideoMetadataValidationException>(addVideoMetadataTask.AsTask);
+                await Assert.ThrowsAsync<VideoMetadataValidationException>(
+                    modifyVideoMetadataTask.AsTask);
 
-
-            //then
-            actualVideoMetadataValidationException.Should().BeEquivalentTo(expectedVideoMetadataValidationException);
+            // then
+            actualVideoMetadataValidationException.Should()
+                .BeEquivalentTo(expectedVideoMetadataValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataValidationException))),
-                    Times.Once);
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedVideoMetadataValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
-                    Times.Never);
-
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateDatesIsNotSameAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfVideoMetadataDoesNotExistAndLogItAsync()
         {
             // given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
-            int randomNumber = GetRandomNumber();
-            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata(randomDateTime);
-            VideoMetadata invalidVideoMetadata = randomVideoMetadata;
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
+            VideoMetadata nonExistVideoMetadata = randomVideoMetadata;
+            VideoMetadata nullVideoMetadata = null;
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
-                    .Returns(randomDateTime);
-
-            invalidVideoMetadata.UpdatedDate =
-                invalidVideoMetadata.CreatedDate.AddDays(randomNumber);
-
-            var invalidVideoMetadataException =
-                new InvalidVideoMetadataException(
-                    message: "Video Metadata is invalid.");
-
-            invalidVideoMetadataException.AddData(
-                key: nameof(VideoMetadata.UpdatedDate),
-                values: $"Date is not the same as {nameof(VideoMetadata.CreatedDate)}");
+            var notFoundVideoMetadataException =
+                new NotFoundVideoMetadataException(
+                    message: $"Couldn't find video metadata with id {nonExistVideoMetadata.Id}",
+                    nonExistVideoMetadata.Id);
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
                     message: "Video Metadata Validation Exception occured, fix the errors and try again.",
-                    innerException: invalidVideoMetadataException);
+                    innerException: notFoundVideoMetadataException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectVideoMetadataByIdAsync(nonExistVideoMetadata.Id))
+                    .ReturnsAsync(nullVideoMetadata);
 
             // when
-            ValueTask<VideoMetadata> addVideoMetadataTask =
-                this.videoMetadataService.AddVideoMetadataAsync(invalidVideoMetadata);
+            ValueTask<VideoMetadata> modifyVideoMetadataTask =
+                this.videoMetadataService.ModifyVideoMetadataAsync(nonExistVideoMetadata);
 
-            var actualVideoMetadataValidationException =
+            VideoMetadataValidationException actualVideoMetadataValidationException =
                 await Assert.ThrowsAsync<VideoMetadataValidationException>(
-                    addVideoMetadataTask.AsTask);
+                    modifyVideoMetadataTask.AsTask);
 
             // then
             actualVideoMetadataValidationException.Should().BeEquivalentTo(
                 expectedVideoMetadataValidationException);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameValidationExceptionAs(
-                    expectedVideoMetadataValidationException))),
-                        Times.Once);
-
-
             this.storageBrokerMock.Verify(broker =>
-                broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
-                    Times.Never);
+                broker.SelectVideoMetadataByIdAsync(nonExistVideoMetadata.Id),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataValidationException))),
+                    Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

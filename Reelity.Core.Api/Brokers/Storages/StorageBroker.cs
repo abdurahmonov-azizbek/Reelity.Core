@@ -32,14 +32,14 @@ namespace Reelity.Core.Api.Brokers.Storages
 
         private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class =>
            await FindAsync<T>(objectIds);
-           
+
         public IQueryable<T> SelectAll<T>() where T : class
         {
             var broker = new StorageBroker(this.configuration);
 
             return broker.Set<T>();
         }
-        
+
         public async ValueTask<T> UpdateAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);
@@ -48,7 +48,7 @@ namespace Reelity.Core.Api.Brokers.Storages
 
             return @object;
         }
-        
+
         private async ValueTask<T> DeleteAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);
