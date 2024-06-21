@@ -89,7 +89,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
         {
             if (videoMetadata is null)
             {
-                throw new NullVideoMetadataException(message: "VideoMetadata is null.");
+                throw new NullVideoMetadataException("Video Metadata is null.");
             }
         }
 
@@ -151,6 +151,18 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             }
 
             invalidVideoMetadataException.ThrowIfContainsErrors();
+        }
+
+        private static void ValidateVideoMetadataId(Guid videoMetadataId) =>
+            Validate((Rule: IsInvalid(videoMetadataId), Parameter: nameof(VideoMetadata.Id)));
+
+        private static void ValidateStorageVideoMetadataExists(VideoMetadata maybeVideoMetadata, Guid videoMetadataId)
+        {
+            if (maybeVideoMetadata is null)
+            {
+                throw new NotFoundVideoMetadataException(
+                    message: $"Couldn't find VideoMetadata with id: {videoMetadataId}.");
+            }
         }
     }
 }

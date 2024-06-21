@@ -39,6 +39,19 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
                     return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
                 });
 
+        public ValueTask<VideoMetadata> RemoveVideoMetadataByIdAsync(Guid videoMetadataId) =>
+            TryCatch(async () =>
+           {
+                ValidateVideoMetadataId(videoMetadataId);
+
+                VideoMetadata maybeVideoMetadata =
+                await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
+
+                ValidateStorageVideoMetadataExists(maybeVideoMetadata, videoMetadataId);
+
+                return await this.storageBroker.DeleteVideoMetadataAsync(maybeVideoMetadata);
+        });
+        
         public ValueTask<VideoMetadata> DeleteVideoMetadataAsync(Guid videoMetadataId)
         {
             throw new NotImplementedException();
@@ -58,7 +71,6 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                 return await this.storageBroker.UpdateVideoMetadataAsync(videoMetadata);
             });
-        
 
         public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
             TryCatch(() => this.storageBroker.SelectAllVideoMetadatas());
@@ -75,7 +87,5 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                 return maybeVideoMetadata;
             });
-
-
     }
 }

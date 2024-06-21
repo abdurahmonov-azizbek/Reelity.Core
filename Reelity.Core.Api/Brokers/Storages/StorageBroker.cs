@@ -5,6 +5,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.Mapping;
+using Reelity.Core.Api.Models.VideoMetadatas;
 using System.Linq;
 using System.Threading.Tasks;
 
