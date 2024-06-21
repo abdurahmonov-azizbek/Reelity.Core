@@ -11,6 +11,7 @@ using Reelity.Core.Api.Models.VideoMetadatas;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Reelity.Core.Api.Services.VideoMetadatas
 {
@@ -37,6 +38,22 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
 
                     return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
                 });
+
+        public ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata) =>
+            TryCatch(async () =>
+            {
+                ValidateVideoMetadataOnModify(videoMetadata);
+
+                var maybeVideoMetadata =
+                    await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadata.Id);
+
+                ValidateAgainstStorageOnModify(
+                    inputVideoMetadata: videoMetadata,
+                    storageVideoMetadata: maybeVideoMetadata);
+
+                return await this.storageBroker.UpdateVideoMetadataAsync(videoMetadata);
+            });
+        
 
         public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
             TryCatch(() => this.storageBroker.SelectAllVideoMetadatas());
