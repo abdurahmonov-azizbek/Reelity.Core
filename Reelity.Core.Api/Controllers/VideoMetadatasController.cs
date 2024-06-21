@@ -76,5 +76,33 @@ namespace Reelity.Core.Api.Controllers
                 return InternalServerError(videoMetadataServiceException.InnerException);
             }
         }
+
+        [HttpPut]
+        public async ValueTask<ActionResult<VideoMetadata>> PutVideoMetadataAsync(VideoMetadata videoMetadata)
+        {
+            try
+            {
+                VideoMetadata modifiedVideoMetadata = await this.videoMetadataService.ModifyVideoMetadataAsync(videoMetadata);
+
+                return Ok(modifiedVideoMetadata);
+            }
+            catch (VideoMetadataValidationException videoMetadataValidationException)
+                  when (videoMetadataValidationException.InnerException is NotFoundVideoMetadataException)
+            {
+                return NotFound(videoMetadataValidationException.InnerException);
+            }
+            catch (VideoMetadataValidationException videoMetadataValidationException)
+            {
+                return BadRequest(videoMetadataValidationException.InnerException);
+            }
+            catch (VideoMetadataDependencyException videoMetadataDependencyException)
+            {
+                return InternalServerError(videoMetadataDependencyException.InnerException);
+            }
+            catch (VideoMetadataServiceException videoMetadataServiceException)
+            {
+                return InternalServerError(videoMetadataServiceException.InnerException);
+            }
+        }
     }
 }
