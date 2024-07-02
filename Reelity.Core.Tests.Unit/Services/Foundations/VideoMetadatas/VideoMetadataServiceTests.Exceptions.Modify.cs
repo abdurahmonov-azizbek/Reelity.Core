@@ -125,8 +125,8 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
                     message: "Video metadata is locked, try again later.",
                     innerException: databaseUpdateConcurrencyException);
 
-            var expectedVideoMetadataDependencyException =
-                new VideoMetadataDependencyException(
+            var expectedVideoMetadataDependencyValidationException =
+                new VideoMetadataDependencyValidationException(
                     message: "Video metadata dependency error occured, fix the errors and try again.",
                     innerException: lockedVideoMetadataException);
 
@@ -143,14 +143,14 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             // then
             actualVideoMetadataDependencyException.Should()
-                .BeEquivalentTo(expectedVideoMetadataDependencyException);
+                .BeEquivalentTo(expectedVideoMetadataDependencyValidationException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectVideoMetadataByIdAsync(videoMetadataId), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedVideoMetadataDependencyException))));
+                    expectedVideoMetadataDependencyValidationException))));
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
