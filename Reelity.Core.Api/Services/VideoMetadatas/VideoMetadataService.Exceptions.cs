@@ -58,7 +58,7 @@ namespace Reelity.Core.Api.Services.VideoMetadatas
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedJobException = new LockedVideoMetadataException(
-                    message: "VideoMetadata is locked, please try again.",
+                    message: "Video metadata is locked, try again later.",
                     innerException: dbUpdateConcurrencyException);
 
                 throw CreateAndLogDependencyValidationException(lockedJobException);

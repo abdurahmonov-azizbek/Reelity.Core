@@ -138,11 +138,11 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
             ValueTask<VideoMetadata> modifyVideoMetadataTask =
                 this.videoMetadataService.ModifyVideoMetadataAsync(someVideoMetadata);
 
-            VideoMetadataDependencyException actualVideoMetadataDependencyException =
-                await Assert.ThrowsAsync<VideoMetadataDependencyException>(modifyVideoMetadataTask.AsTask);
+            VideoMetadataDependencyValidationException actualVideoMetadataDependencyValidationException =
+                await Assert.ThrowsAsync<VideoMetadataDependencyValidationException>(modifyVideoMetadataTask.AsTask);
 
             // then
-            actualVideoMetadataDependencyException.Should()
+            actualVideoMetadataDependencyValidationException.Should()
                 .BeEquivalentTo(expectedVideoMetadataDependencyValidationException);
 
             this.storageBrokerMock.Verify(broker =>
