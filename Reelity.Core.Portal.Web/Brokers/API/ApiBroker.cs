@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Reelity.Core.Portal.Web.Brokers.API
 {
-    public class ApiBroker : IApiBroker
+    public partial class ApiBroker : IApiBroker
     {
         private readonly IRESTFulApiFactoryClient apiClinet;
 
