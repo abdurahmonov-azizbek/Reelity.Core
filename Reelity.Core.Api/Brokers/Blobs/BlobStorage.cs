@@ -18,8 +18,6 @@ namespace Reelity.Core.Api.Brokers.Blobs
 {
     public class BlobStorage 
     {
-        #region Dependency Injection / Constructor
-
         private readonly string storageConnectionString;
         private readonly string storageContainerName;
         private readonly ILogger<BlobStorage> logger;
@@ -30,8 +28,6 @@ namespace Reelity.Core.Api.Brokers.Blobs
             this.storageContainerName = configuration.GetValue<string>("BlobContainerName");
             this.logger = logger;
         }
-
-        #endregion
 
         public async Task<BlobResponse> DeleteAsync(string blobFilename)
         {
