@@ -77,7 +77,7 @@ namespace Reelity.Core.Api.Brokers.Blobs
             return null;
         }
 
-        public async Task<List<Blob>> ListAsync()
+        public async Task<List<Blob>> GetAllBlobsAsync()
         {
             BlobContainerClient container = new BlobContainerClient(storageConnectionString, storageContainerName);
 
@@ -110,7 +110,7 @@ namespace Reelity.Core.Api.Brokers.Blobs
             {
                 BlobClient client = container.GetBlobClient(blob.FileName);
 
-                await using (Stream? data = blob.OpenReadStream())
+                await using (Stream data = blob.OpenReadStream())
                 {
                     await client.UploadAsync(data);
                 }

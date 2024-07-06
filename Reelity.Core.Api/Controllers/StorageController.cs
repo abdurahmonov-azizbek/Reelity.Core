@@ -27,7 +27,7 @@ namespace Reelity.Core.Api.Controllers
         [HttpGet(nameof(Get))]
         public async Task<IActionResult> Get()
         {
-            List<Blob> files = await blobStorage.ListAsync();
+            List<Blob> files = await blobStorage.GetAllBlobsAsync();
 
             return StatusCode(StatusCodes.Status200OK, files);
         }
