@@ -6,13 +6,10 @@
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Moq;
 using Reelity.Core.Api.Models.VideoMetadatas;
 using Reelity.Core.Api.Models.VideoMetadatas.Exceptions;
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
@@ -28,12 +25,12 @@ namespace Reelity.Core.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var lockedVideoMetadataException =
                 new LockedVideoMetadataException(
-                    message: "VideoMetadata is locked, please try again.",
+                    message: "Video metadata is locked, try again later.",
                     innerException: databaseUpdateConcurrencyException);
 
             var expectedVideoMetadataDependencyValidationException =
                 new VideoMetadataDependencyValidationException(
-                    message: "Video metadata dependency error occured, fix the errors and try again.", 
+                    message: "Video metadata dependency error occured, fix the errors and try again.",
                     innerException: lockedVideoMetadataException);
 
             this.storageBrokerMock.Setup(broker =>
