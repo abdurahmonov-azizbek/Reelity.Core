@@ -27,7 +27,7 @@ namespace Reelity.Core.Api.Controllers
         [HttpGet(nameof(Get))]
         public async Task<IActionResult> Get()
         {
-            List<Blob> files = await blobStorage.GetAllBlobsAsync();
+            List<Blob> files = await this.blobStorage.GetAllBlobsAsync();
 
             return StatusCode(StatusCodes.Status200OK, files);
         }
@@ -35,7 +35,7 @@ namespace Reelity.Core.Api.Controllers
         [HttpPost(nameof(Upload))]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            BlobResponse response = await blobStorage.UploadAsync(file);
+            BlobResponse response = await this.blobStorage.UploadAsync(file);
 
             if (response.Error == true)
             {
@@ -50,7 +50,7 @@ namespace Reelity.Core.Api.Controllers
         [HttpGet("{filename}")]
         public async Task<IActionResult> Download(string filename)
         {
-            Blob file = await blobStorage.DownloadAsync(filename);
+            Blob file = await this.blobStorage.DownloadAsync(filename);
 
             if (file == null)
             {
@@ -65,7 +65,7 @@ namespace Reelity.Core.Api.Controllers
         [HttpDelete("filename")]
         public async Task<IActionResult> Delete(string filename)
         {
-            BlobResponse response = await blobStorage.DeleteAsync(filename);
+            BlobResponse response = await this.blobStorage.DeleteAsync(filename);
 
             if (response.Error == true)
             {
